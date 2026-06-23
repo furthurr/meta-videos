@@ -2,11 +2,7 @@
 
 Extensión para Google Chrome (Manifest V3) que automatiza la generación de
 videos en [meta.ai](https://meta.ai) a partir de una lista de prompts.
-
-> Inspirada en el comportamiento de la extensión pública
-> **Meta Automation — Auto Meta on Meta.ai**
-> ([Chrome Web Store](https://chromewebstore.google.com/detail/pcmcomcmgpmnpdmkdgjnipeipchbfchf)),
-> reimplementada en vanilla JS sin dependencias externas.
+Implementada en vanilla JS, sin dependencias externas.
 
 ## Vista previa
 
@@ -211,3 +207,12 @@ MV_SMOKE=1 npm run test:real # validación rápida: 1 video
 > queda guardado en `test/.auth-profile/` (ignorado por git) para reusarse. Los
 > selectores reales se afinan con los scripts de `test/cdp/`
 > (`--remote-debugging-port=9222`).
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia **MIT**. Consulta el archivo
+[LICENSE](LICENSE) para más detalles.
+
+## Autor
+
+**Pedro GV** — [@furthurr](https://github.com/furthurr)
