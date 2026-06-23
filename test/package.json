@@ -1,0 +1,20 @@
+{
+  "name": "meta-videos-tests",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Suite de tests para la extension Meta Videos 4x5s",
+  "scripts": {
+    "test": "node run-all.mjs",
+    "test:lint": "node lint/manifest-validate.mjs && eslint -c lint/eslint.config.mjs ..",
+    "test:unit": "node --test unit/",
+    "test:dom": "node --test dom/",
+    "test:flow": "playwright test --project=chromium",
+    "test:real": "playwright test --config=playwright.real.config.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "eslint": "^9.0.0",
+    "jsdom": "^24.0.0"
+  }
+}

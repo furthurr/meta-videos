@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mock meta.ai - cola de 3 prompts (el 3o generando)</title>
+  </head>
+  <body>
+    <!--
+      Reproduce el estado real del bug: 2 prompts ya completos (con sus 4 videos)
+      y el 3er prompt RECIEN enviado (contenedor con loader <canvas>, sin <video>).
+      findResultVideos() NO debe devolver los videos de prompts anteriores.
+    -->
+    <div class="conversation">
+      <!-- prompt 1 (completo) -->
+      <div data-message-item="true">
+        <div class="results">
+          <div class="group/media-item media-item"><video src="vid.mp4?b=1&i=0"></video></div>
+          <div class="group/media-item media-item"><video src="vid.mp4?b=1&i=1"></video></div>
+          <div class="group/media-item media-item"><video src="vid.mp4?b=1&i=2"></video></div>
+          <div class="group/media-item media-item"><video src="vid.mp4?b=1&i=3"></video></div>
+        </div>
+      </div>
+
+      <!-- prompt 2 (completo) -->
+      <div data-message-item="true">
+        <div class="results">
+          <div class="group/media-item media-item"><video src="vid.mp4?b=2&i=0"></video></div>
+          <div class="group/media-item media-item"><video src="vid.mp4?b=2&i=1"></video></div>
+          <div class="group/media-item media-item"><video src="vid.mp4?b=2&i=2"></video></div>
+          <div class="group/media-item media-item"><video src="vid.mp4?b=2&i=3"></video></div>
+        </div>
+      </div>
+
+      <!-- prompt 3 (generando: loader canvas, SIN video todavia) -->
+      <div data-message-item="true" id="p3">
+        <div class="group/media-item media-item">
+          <div class="loader"><canvas width="200" height="356"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs / temporales
+*.log
+
+# Node / tests
+node_modules/
+
+# Playwright
+test-results/
+playwright-report/
+.last-run.json
+
+# E2E real (meta.ai): perfil con sesion, build temporal, descargas y reportes
+.auth-profile/
+.real-ext/
+.downloads/
+report.json
+dom-dump.json
+test/real/output/

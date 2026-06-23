@@ -1,0 +1,13 @@
+{
+  "durationSec": 5,
+  "resolution": "720p",
+  "aspect": "9:16",
+  "videosPerPrompt": 4,
+  "maxRetries": 5,
+  "delayBetweenSubmitsMs": 3000,
+  "delayBetweenPromptsMs": 15000,
+  "downloadFolder": "MetaVideos",
+  "numberFiles": true,
+  "backoffBaseMs": 5000,
+  "backoffCapMs": 60000
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mock Meta AI (video)</title>
+    <style>
+      body { font-family: sans-serif; margin: 0; padding: 16px; }
+      .conversation { min-height: 200px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 90px; }
+      .message { padding: 10px; border-radius: 8px; }
+      .results { display: flex; gap: 8px; flex-wrap: wrap; }
+      .group\/media-item, .media-item {
+        position: relative; width: 200px; height: 356px; border-radius: 12px; overflow: hidden; background: #000;
+      }
+      .media-item video { width: 100%; height: 100%; object-fit: cover; }
+      .loader { width: 200px; height: 356px; border-radius: 12px; background: #222; display: flex; align-items: center; justify-content: center; }
+      .composer {
+        position: fixed; bottom: 0; left: 0; right: 0; display: flex; gap: 8px; padding: 12px;
+        background: #fff; border-top: 1px solid #ddd;
+      }
+      .editor { flex: 1; min-height: 44px; border: 1px solid #ccc; border-radius: 8px; padding: 10px; }
+      button { padding: 8px 16px; }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <main>
+        <div class="conversation" id="conversation"></div>
+        <div class="composer">
+          <!-- meta.ai real: editor Lexical contenteditable -->
+          <div
+            id="composer-input"
+            class="editor"
+            role="textbox"
+            contenteditable="true"
+            data-placeholder="Describe una imagen o un vídeo..."
+          ></div>
+          <button id="send-btn" data-testid="composer-send-button" aria-label="Enviar" type="button" disabled>Enviar</button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      /**
+       * Mock del flujo de VIDEO de meta.ai:
+       *   - editor contenteditable + boton data-testid="composer-send-button"
+       *   - al enviar: contenedor div[data-message-item] con un <canvas> de carga
+       *     (loadingOutputElement) durante ?gen ms
+       *   - luego N tarjetas div.group/media-item con <video src="sample.mp4">
+       *
+       * Params: ?videos=4  ?gen=1500  ?failTimes=0
+       */
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var N = parseInt(params.get("videos") || "4", 10);
+        var GEN_MS = parseInt(params.get("gen") || "1500", 10);
+        var FAIL_TIMES = parseInt(params.get("failTimes") || "0", 10);
+        var sendCount = 0;
+
+        var conv = document.getElementById("conversation");
+        var input = document.getElementById("composer-input");
+        var sendBtn = document.getElementById("send-btn");
+
+        function syncDisabled() {
+          sendBtn.disabled = (input.textContent || "").trim().length === 0;
+        }
+        input.addEventListener("input", syncDisabled);
+
+        function addGenerating() {
+          var msg = document.createElement("div");
+          msg.className = "message assistant";
+          msg.setAttribute("data-message-item", "true");
+          var card = document.createElement("div");
+          card.className = "group/media-item media-item";
+          // el loader real de meta.ai es un <canvas>
+          var loader = document.createElement("div");
+          loader.className = "loader";
+          var canvas = document.createElement("canvas");
+          canvas.width = 200; canvas.height = 356;
+          loader.appendChild(canvas);
+          card.appendChild(loader);
+          msg.appendChild(card);
+          conv.appendChild(msg);
+          return msg;
+        }
+
+        function finishWithVideos(msg, batch) {
+          msg.innerHTML = "";
+          var results = document.createElement("div");
+          results.className = "results";
+          for (var i = 0; i < N; i++) {
+            var card = document.createElement("div");
+            card.className = "group/media-item media-item";
+            var v = document.createElement("video");
+            // URL unica por envio+lote para que el content distinga resultados nuevos.
+            v.src = "sample.mp4?b=" + batch + "&i=" + i;
+            v.muted = true;
+            v.setAttribute("playsinline", "");
+            v.setAttribute("preload", "auto");
+            card.appendChild(v);
+            // boton Descargar (como meta.ai), por si se usa esa via
+            var dl = document.createElement("button");
+            dl.setAttribute("aria-label", "Descargar");
+            dl.textContent = "Descargar";
+            card.appendChild(dl);
+            results.appendChild(card);
+          }
+          msg.appendChild(results);
+        }
+
+        function finishWithError(msg) {
+          msg.innerHTML = '<div role="alert">Something went wrong. Please try again.</div>';
+        }
+
+        function submit() {
+          var text = (input.textContent || "").trim();
+          if (!text) return;
+          sendCount++;
+          input.textContent = "";
+          syncDisabled();
+
+          var msg = addGenerating();
+          var willFail = sendCount <= FAIL_TIMES;
+          var batch = sendCount; // identificador de envio para distinguir videos nuevos
+          setTimeout(function () {
+            if (willFail) finishWithError(msg);
+            else finishWithVideos(msg, batch);
+          }, GEN_MS);
+        }
+
+        sendBtn.addEventListener("click", submit);
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }
+        });
+        syncDisabled();
+      })();
+    </script>
+  </body>
+</html>

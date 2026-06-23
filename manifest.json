@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Meta Videos 4x5s",
+  "short_name": "Meta Videos",
+  "version": "0.1.0",
+  "description": "Automatiza meta.ai: envia prompts y descarga hasta N videos por prompt con duracion y formato configurables.",
+  "permissions": [
+    "storage",
+    "downloads",
+    "scripting",
+    "alarms",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "https://meta.ai/*",
+    "https://*.meta.ai/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Meta Videos 4x5s"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://meta.ai/*",
+        "https://*.meta.ai/*"
+      ],
+      "js": [
+        "lib/slug.js",
+        "lib/delay.js",
+        "lib/selectors.js",
+        "lib/downloader.js",
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}

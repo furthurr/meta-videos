@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meta Videos 4x5s</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <img class="logo" src="../icons/icon48.png" alt="" />
+        <div class="titles">
+          <h1 class="title">Meta Videos</h1>
+          <p class="subtitle" id="subtitle">Listo</p>
+        </div>
+        <div class="state-pill" id="statePill" data-state="idle">—</div>
+      </header>
+
+      <nav class="tabs" role="tablist">
+        <button class="tab active" data-tab="menu" type="button" role="tab">
+          <span class="tab-icon">📝</span><span>Menú</span>
+        </button>
+        <button class="tab" data-tab="monitor" type="button" role="tab">
+          <span class="tab-icon">📊</span><span>Monitor</span>
+        </button>
+      </nav>
+
+      <main class="main">
+        <!-- ====== TAB: MENU ====== -->
+        <section class="tab-panel" data-tab="menu" role="tabpanel">
+          <div class="section">
+            <label class="label" for="prompts">
+              Prompts <span class="muted">(uno por línea, o separados por líneas en blanco)</span>
+            </label>
+            <textarea
+              id="prompts"
+              class="prompts"
+              rows="6"
+              placeholder="Un astronauta caminando en Marte al atardecer&#10;&#10;Un gato flotando entre galaxias&#10;&#10;Una ciudad cyberpunk bajo la lluvia&#10;&#10;Un dragon sobre las nubes al amanecer"
+              spellcheck="false"
+            ></textarea>
+            <div class="meta-line">
+              <span id="promptCount" class="muted">0 prompts</span>
+              <button id="loadFile" class="link" type="button">Cargar .txt</button>
+              <input id="fileInput" type="file" accept=".txt,text/plain" hidden />
+            </div>
+          </div>
+
+          <div class="section">
+            <button id="toggleCfg" class="cfg-toggle" type="button" aria-expanded="false">
+              <span>Configuración</span>
+              <span id="cfgChevron" class="chev">▸</span>
+            </button>
+            <div id="cfgPanel" class="cfg-panel" hidden>
+              <div class="row">
+                <label for="durationSec">Duración</label>
+                <select id="durationSec">
+                  <option value="4">4 s</option>
+                  <option value="5" selected>5 s</option>
+                  <option value="6">6 s</option>
+                </select>
+              </div>
+              <div class="row">
+                <label for="resolution">Resolución</label>
+                <select id="resolution">
+                  <option value="720p" selected>720p</option>
+                  <option value="1080p">1080p</option>
+                </select>
+              </div>
+              <div class="row">
+                <label for="aspect">Aspecto</label>
+                <select id="aspect">
+                  <option value="16:9">16:9 (horizontal)</option>
+                  <option value="9:16" selected>9:16 (vertical)</option>
+                  <option value="1:1">1:1 (cuadrado)</option>
+                </select>
+              </div>
+              <div class="row">
+                <label for="videosPerPrompt">Videos por prompt</label>
+                <input id="videosPerPrompt" type="number" min="1" max="8" value="4" />
+              </div>
+              <div class="row">
+                <label for="maxRetries">Reintentos por video</label>
+                <input id="maxRetries" type="number" min="0" max="10" value="5" />
+              </div>
+              <div class="row">
+                <label for="delaySubmits">Delay entre submits (ms)</label>
+                <input id="delaySubmits" type="number" min="1000" max="60000" step="500" value="3000" />
+              </div>
+              <div class="row">
+                <label for="delayPrompts">Delay entre prompts (ms)</label>
+                <input id="delayPrompts" type="number" min="1000" max="120000" step="500" value="15000" />
+              </div>
+              <div class="row">
+                <label for="downloadFolder">Carpeta destino</label>
+                <input id="downloadFolder" type="text" value="MetaVideos" />
+              </div>
+              <div class="row check">
+                <label for="numberFiles">
+                  <input id="numberFiles" type="checkbox" checked />
+                  Numerar archivos (01, 02, …)
+                </label>
+              </div>
+              <div class="row">
+                <button id="saveCfg" class="btn btn-secondary" type="button">Guardar configuración</button>
+                <span id="cfgStatus" class="muted small"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section status-section">
+            <div class="status-row">
+              <div class="status-block">
+                <div class="status-num" id="statPrompts">0/0</div>
+                <div class="status-label">prompts</div>
+              </div>
+              <div class="status-block">
+                <div class="status-num" id="statVideos">0/0</div>
+                <div class="status-label">videos</div>
+              </div>
+            </div>
+            <div class="progress-track">
+              <div id="progressBar" class="progress-bar"></div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="startBtn" class="btn btn-primary" type="button">▶ Iniciar</button>
+            <button id="pauseBtn" class="btn btn-ghost" type="button" hidden>Pausar</button>
+            <button id="resumeBtn" class="btn btn-ghost" type="button" hidden>Reanudar</button>
+            <button id="stopBtn" class="btn btn-danger" type="button" hidden>Detener</button>
+            <button id="resetBtn" class="btn btn-reset" type="button" title="Detener y reiniciar a estado inicial">
+              <span class="reset-icon" aria-hidden="true">⟳</span><span>Reiniciar</span>
+            </button>
+            <button id="openMetaBtn" class="btn btn-open-meta" type="button" title="Abrir Meta.IA en una pestaña">
+              <span class="open-meta-icon" aria-hidden="true">↗</span><span>Abrir Meta.IA</span>
+            </button>
+          </div>
+
+          <p id="hint" class="hint">
+            Inicia sesión en <b>meta.ai</b> y vuelve aquí. Los videos se guardan en
+            <b>Descargas/MetaVideos/&lt;slug&gt;/</b>.
+          </p>
+        </section>
+
+        <!-- ====== TAB: MONITOR ====== -->
+        <section class="tab-panel" data-tab="monitor" role="tabpanel" hidden>
+          <div class="section">
+            <h2 class="section-title">Cola</h2>
+            <ul id="queueList" class="queue-list">
+              <li class="empty">Sin prompts cargados.</li>
+            </ul>
+          </div>
+
+          <div class="section log-section">
+            <h2 class="section-title">Registro</h2>
+            <ol id="logList" class="log-list"></ol>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="../lib/parser.js"></script>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
