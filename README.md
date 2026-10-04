@@ -208,11 +208,13 @@ MV_SMOKE=1 npm run test:real # validación rápida: 1 video
 > selectores reales se afinan con los scripts de `test/cdp/`
 > (`--remote-debugging-port=9222`).
 
-## Licencia
-
-Este proyecto se distribuye bajo la licencia **MIT**. Consulta el archivo
-[LICENSE](LICENSE) para más detalles.
-
 ## Autor
 
-**Pedro GV** — [@furthurr](https://github.com/furthurr)
+<a href="https://furthurr.github.io/" target="_blank" rel="noopener noreferrer">Pedro G. V. @furthurr</a>
+
+- **GitHub:** https://github.com/furthurr
+- **Email:** pedrogvas@gmail.com
+
+## Licencia
+
+MIT
